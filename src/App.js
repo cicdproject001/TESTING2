@@ -1,5 +1,5 @@
 import "./App.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import SingleCard from "./components/SingleCard";
 
 let cardImages = [
@@ -18,42 +18,37 @@ function App() {
   const [choiceTwo, setChoiceTwo] = useState("");
   const [disabled, setdisabled] = useState(false);
 
-useEffect(() => {
-  if (choiceOne && choiceTwo) {
-    setdisabled(true);
-
-    if (choiceOne.src === choiceTwo.src) {
-      setCards((prevCards) => {
-        return prevCards.map((card) => {
-          if (card.src === choiceTwo.src) {
-            return { ...card, matched: true };
-          } else {
-            return card;
-          }
-        });
-      });
-      resetTurn();
-    } else {
-      console.log("they dont match");
-      setTimeout(() => resetTurn(), 1000);
-    }
-  }
-  console.log(cards);
-}, [choiceOne, choiceTwo, setdisabled, setCards, resetTurn, cards]);
-
-  let resetTurn = () => {
+  // ✅ define resetTurn before useEffect, wrap with useCallback
+  const resetTurn = useCallback(() => {
     setchoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurn) => prevTurn + 1);
     setdisabled(false);
-  };
+  }, []);
 
-  let shuffledCards = () => {
+  useEffect(() => {
+    if (choiceOne && choiceTwo) {
+      setdisabled(true);
+
+      if (choiceOne.src === choiceTwo.src) {
+        setCards((prevCards) =>
+          prevCards.map((card) =>
+            card.src === choiceTwo.src ? { ...card, matched: true } : card
+          )
+        );
+        resetTurn();
+      } else {
+        console.log("they dont match");
+        setTimeout(() => resetTurn(), 1000);
+      }
+    }
+    console.log(cards);
+  }, [choiceOne, choiceTwo, resetTurn, cards]); // ✅ clean deps
+
+  const shuffledCards = () => {
     let shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
-      .map((card) => {
-        return { ...card, id: crypto.randomUUID() };
-      });
+      .map((card) => ({ ...card, id: crypto.randomUUID() }));
 
     setchoiceOne(null);
     setChoiceTwo(null);
@@ -62,26 +57,25 @@ useEffect(() => {
   };
 
   useEffect(() => shuffledCards(), []);
+
   return (
     <div className="App">
       <h1>Fortnite Fusion</h1>
       <button onClick={shuffledCards}>New Game</button>
 
       <div className="card-grid">
-        {cards.map((card) => {
-          return (
-            <SingleCard
-              choiceOne={choiceOne}
-              setchoiceOne={setchoiceOne}
-              choiceTwo={choiceTwo}
-              setChoiceTwo={setChoiceTwo}
-              key={card.id}
-              card={card}
-              flipped={card === choiceOne || card === choiceTwo || card.matched}
-              disabled={disabled}
-            />
-          );
-        })}
+        {cards.map((card) => (
+          <SingleCard
+            choiceOne={choiceOne}
+            setchoiceOne={setchoiceOne}
+            choiceTwo={choiceTwo}
+            setChoiceTwo={setChoiceTwo}
+            key={card.id}
+            card={card}
+            flipped={card === choiceOne || card === choiceTwo || card.matched}
+            disabled={disabled}
+          />
+        ))}
       </div>
       <p>Turns: {turns}</p>
     </div>
