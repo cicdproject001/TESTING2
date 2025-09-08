@@ -18,28 +18,28 @@ function App() {
   const [choiceTwo, setChoiceTwo] = useState("");
   const [disabled, setdisabled] = useState(false);
 
-  useEffect(() => {
-    if (choiceOne && choiceTwo) {
-      setdisabled(true);
+useEffect(() => {
+  if (choiceOne && choiceTwo) {
+    setdisabled(true);
 
-      if (choiceOne.src === choiceTwo.src) {
-        setCards((prevCards) => {
-          return prevCards.map((card) => {
-            if (card.src === choiceTwo.src) {
-              return { ...card, matched: true };
-            } else {
-              return card;
-            }
-          });
+    if (choiceOne.src === choiceTwo.src) {
+      setCards((prevCards) => {
+        return prevCards.map((card) => {
+          if (card.src === choiceTwo.src) {
+            return { ...card, matched: true };
+          } else {
+            return card;
+          }
         });
-        resetTurn();
-      } else {
-        console.log("they dont match");
-        setTimeout(() => resetTurn(), 1000);
-      }
+      });
+      resetTurn();
+    } else {
+      console.log("they dont match");
+      setTimeout(() => resetTurn(), 1000);
     }
-    console.log(cards);
-  }, [choiceOne, choiceTwo]);
+  }
+  console.log(cards);
+}, [choiceOne, choiceTwo, setdisabled, setCards, resetTurn, cards]);
 
   let resetTurn = () => {
     setchoiceOne(null);
