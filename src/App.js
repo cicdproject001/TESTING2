@@ -60,7 +60,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Fortnite Fusion</h1>
+      <h1>CLOUD TEST</h1>
       <button onClick={shuffledCards}>New Game</button>
 
       <div className="card-grid">
