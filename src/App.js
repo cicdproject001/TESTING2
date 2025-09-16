@@ -60,7 +60,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>CLOUD PROJECT</h1>
+      <h1>CLOUD PROJECT3</h1>
       <button onClick={shuffledCards}>New Game</button>
 
       <div className="card-grid">
@@ -80,6 +80,6 @@ function App() {
       <p>Turns: {turns}</p>
     </div>
   );
-}
+ }
 
 export default App;
