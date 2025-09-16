@@ -1,7 +1,6 @@
 # Getting Started with Create React App
 
-This is bot project
-dsadsa
+This i
 ## Available Scripts
 
 In the project directory, you can run: hkgjhgf
